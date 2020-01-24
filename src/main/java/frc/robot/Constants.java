@@ -8,12 +8,29 @@
 package frc.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants.  This class should not be used for any other purpose.  All constants should be
- * declared globally (i.e. public static).  Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * Constants holds a list of robot-wide constant definitions.
  */
 public final class Constants {
+    /* Definitions for different motor device numbers */
+    public static int FRONTLEFTMOTOR = 3;
+    public static int BACKLEFTMOTOR = 2;
+    public static int FRONTRIGHTMOTOR = 1;
+    public static int BACKRIGHTMOTOR = 0;
+    public static int ARTICULATIONMOTOR = 13;
+    public static int ROLLERMOTOR = 12;
+    public static int ROLLERMOTORSLAVE = 9;
+    public static int WRISTTALON = 7;
+    public static int LIFTMOTOR = 4;
+    public static int LIFTMOTORSLAVE = 5;
+    public static int LEGSMOTOR = 8;
+
+    public int HLVL1 = 18; // NOT IN USE
+    public int CSC1 = 38; // good
+    public int RSH2 = 40; // good
+    public int RSH3 = 65; // good
+    public int RSC1 = 27;
+    public int RSC2 = 50; // good
+    public int RSC3 = 67; // good
+    public int FSH1 = 19; // good (pneu)
+    public int ZERO = 0; // good
 }
