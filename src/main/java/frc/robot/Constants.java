@@ -7,10 +7,16 @@
 
 package frc.robot;
 
+import frc.robot.commands.MoveToReflectiveTargetCommand;
+
 /**
  * Constants holds a list of robot-wide constant definitions.
  */
 public final class Constants {
+    /* Default values for the MoveToReflectiveTargetCommand configuration. */
+    public static MoveToReflectiveTargetCommand.Configuration DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION = new MoveToReflectiveTargetCommand.Configuration(
+            () -> 1.0, () -> 1.0);
+
     /* Definitions for different motor device numbers */
     public static int FRONTLEFTMOTOR = 3;
     public static int BACKLEFTMOTOR = 2;

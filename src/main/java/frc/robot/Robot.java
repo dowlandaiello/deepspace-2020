@@ -15,41 +15,52 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * Robot sets up the Robot.
  */
 public class Robot extends TimedRobot {
-    private Command m_autonomousCommand;
-
+    /* The actual robot logic. */
     private RobotContainer m_robotContainer;
 
+    /* A scheduler for the commands issue by the robot. */
+    private CommandScheduler m_scheduler;
+
+    /* The currently selected autonomous command. */
+    private Command m_autonomousCommand;
+
+    /* The currently selected teleop command. */
+    private Command m_teleopCommand;
+
     /**
-     * This function is run when the robot is first started up and should be used
-     * for any initialization code.
+     * Initializes the robot.
      */
     @Override
     public void robotInit() {
-        // Instantiate our RobotContainer. This will perform all our button bindings,
-        // and put our
-        // autonomous chooser on the dashboard.
+        // Initialize a container for the robot logic
         m_robotContainer = new RobotContainer();
+
+        // Load up a command scheduler that we can use for scheduling commands, duh.
+        this.m_scheduler = CommandScheduler.getInstance();
     }
 
     /**
-     * This function is called every robot packet, no matter the mode. Use this for
-     * items like diagnostics that you want ran during disabled, autonomous,
-     * teleoperated and test.
-     *
-     * <p>
-     * This runs after the mode specific periodic functions, but before LiveWindow
-     * and SmartDashboard integrated updating.
+     * Polls the robot, allocating resources to the event loop as necessary.
      */
     @Override
     public void robotPeriodic() {
-        // Runs the Scheduler. This is responsible for polling buttons, adding
-        // newly-scheduled
-        // commands, running already-scheduled commands, removing finished or
-        // interrupted commands,
-        // and running subsystem periodic() methods. This must be called from the
-        // robot's periodic
-        // block in order for anything in the Command-based framework to work.
-        CommandScheduler.getInstance().run();
+        // Poll the scheduler. This must be done every frame, since it's really just an
+        // event loop with a fancy name.
+        this.m_scheduler.run();
+    }
+
+    @Override
+    public void autonomousInit() {
+        // If the teleop command is already running, stop it.
+        if (this.m_teleopCommand != null) {
+            this.m_teleopCommand.cancel();
+        }
+
+        // Set up the autonomous command for the robot
+        this.m_autonomousCommand = this.m_robotContainer.getAutonomousCommand();
+
+        // Start the autonomous command
+        this.m_scheduler.schedule(this.m_autonomousCommand);
     }
 
     @Override
@@ -61,6 +72,12 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+        // Set up the teleop command for the robot
+        this.m_teleopCommand = this.m_robotContainer.getTeleopCommand();
+
+        // Start the teleop command
+        this.m_scheduler.schedule(this.m_teleopCommand);
     }
 
     /**
