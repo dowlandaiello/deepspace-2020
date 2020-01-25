@@ -13,16 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class DriveSubsystem extends SubsystemBase {
     public static class MotorControllerConfiguration {
         /* The front left motor controller */
-        final TalonSRX frontLeftController;
-
-        /* The front right motor controller */
-        final TalonSRX frontRightController;
-
-        /* The back left motor controller */
-        final TalonSRX backLeftController;
-
-        /* The back right motor controller */
-        final TalonSRX backRightController;
+        TalonSRX frontLeftController, frontRightController, backLeftController, backRightController;
 
         /**
          * Initializes a new MotorControllerConfiguration with the given ports.
@@ -34,6 +25,7 @@ public class DriveSubsystem extends SubsystemBase {
          */
         public MotorControllerConfiguration(int frontLeftControllerPort, int frontRightControllerPort,
                 int backLeftControllerPort, int backRightControllerPort) {
+            // Initialize each of the talons
             this.frontLeftController = new TalonSRX(frontLeftControllerPort);
             this.frontRightController = new TalonSRX(frontRightControllerPort);
             this.backLeftController = new TalonSRX(backLeftControllerPort);

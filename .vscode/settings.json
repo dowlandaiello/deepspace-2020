@@ -12,5 +12,7 @@
     "**/.settings": true,
     "**/.factorypath": true,
     "**/*~": true
-  }
+  },
+  "editor.autoIndent": "full",
+  "editor.tabSize": 4
 }
