@@ -21,9 +21,6 @@ public class Robot extends TimedRobot {
     /* A scheduler for the commands issue by the robot. */
     private CommandScheduler m_scheduler;
 
-    /* The currently selected autonomous command. */
-    private Command m_autonomousCommand;
-
     /* The currently selected teleop command. */
     private Command m_teleopCommand;
 
@@ -50,29 +47,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousInit() {
-        // If the teleop command is already running, stop it.
-        if (this.m_teleopCommand != null) {
-            this.m_teleopCommand.cancel();
-        }
-
-        // Set up the autonomous command for the robot
-        this.m_autonomousCommand = this.m_robotContainer.getAutonomousCommand();
-
-        // Start the autonomous command
-        this.m_scheduler.schedule(this.m_autonomousCommand);
-    }
-
-    @Override
     public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
-
         // Set up the teleop command for the robot
         this.m_teleopCommand = this.m_robotContainer.getTeleopCommand();
 

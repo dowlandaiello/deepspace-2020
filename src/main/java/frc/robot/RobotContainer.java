@@ -118,14 +118,4 @@ public class RobotContainer {
         // Return the robot's teleop command
         return this.teleopCommand;
     }
-
-    /**
-     * Gets the currently selected autonomous command for the robot.
-     * 
-     * @return the autonomous command for the robot
-     */
-    public Command getAutonomousCommand() {
-        // Return the robot's autonomous command
-        return this.autonomousCommand;
-    }
 }
