@@ -26,96 +26,98 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * @author Dowland Aiello
  */
 public class RobotContainer {
-    /* BEGIN SUBSYSTEMS */
+        /* BEGIN SUBSYSTEMS */
 
-    /* The robot's drivetrain. */
-    private final DriveSubsystem m_drivetrain;
+        /* The robot's drivetrain. */
+        private final DriveSubsystem m_drivetrain;
 
-    /* The robot's vision subsystem. */
-    private final VisionSubsystem m_vision;
+        /* The robot's vision subsystem. */
+        private final VisionSubsystem m_vision;
 
-    /* END SUBSYSTEMS */
+        /* END SUBSYSTEMS */
 
-    /* The robot's settings. */
-    private final Preferences m_preferences;
+        /* The robot's settings. */
+        private final Preferences m_preferences;
 
-    /* The driver's joystick. */
-    private final Joystick m_leftDriverJoystick, m_rightDriverJoystick;
+        /* The driver's joystick. */
+        private final Joystick m_leftDriverJoystick, m_rightDriverJoystick;
 
-    /* The button box. */
-    private final Joystick m_buttonbox;
+        /* The button box. */
+        private final Joystick m_buttonbox;
 
-    /* The button on the button box used to activate the autonomous command. */
-    private final JoystickButton m_activateAutonomousButton;
+        /* The button on the button box used to activate the autonomous command. */
+        private final JoystickButton m_activateAutonomousButton;
 
-    /* BEGIN COMMANDS */
+        /* BEGIN COMMANDS */
 
-    /* The current teleOp command for the robot. */
-    private final RhinoDriveCommand teleopCommand;
+        /* The current teleOp command for the robot. */
+        private final RhinoDriveCommand teleopCommand;
 
-    /* The current autonomous command for the robot. */
-    private final MoveToReflectiveTargetCommand autonomousCommand;
+        /* The current autonomous command for the robot. */
+        private final MoveToReflectiveTargetCommand autonomousCommand;
 
-    /* END COMMANDS */
+        /* END COMMANDS */
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
-    public RobotContainer() {
-        // Make a motor controller config for the drivetraini
-        MotorControllerConfiguration motorCfg = new MotorControllerConfiguration(Constants.FRONTLEFTMOTOR,
-                Constants.FRONTRIGHTMOTOR, Constants.BACKLEFTMOTOR, Constants.BACKRIGHTMOTOR);
+        /**
+         * The container for the robot. Contains subsystems, OI devices, and commands.
+         */
+        public RobotContainer() {
+                // Make a motor controller config for the drivetraini
+                MotorControllerConfiguration motorCfg = new MotorControllerConfiguration(Constants.FRONTLEFTMOTOR,
+                                Constants.FRONTRIGHTMOTOR, Constants.BACKLEFTMOTOR, Constants.BACKRIGHTMOTOR);
 
-        // Keep the light on the limelight on at all times
-        LimelightConfiguration visionCfg = new LimelightConfiguration(VisionSubsystem.LEDMode.ON);
+                // Keep the light on the limelight on at all times
+                LimelightConfiguration visionCfg = new LimelightConfiguration(VisionSubsystem.LEDMode.ON);
 
-        // Get a reference to the limelight network tables connector
-        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+                // Get a reference to the limelight network tables connector
+                NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-        // Initialize each of the subsystems
-        this.m_preferences = Preferences.getInstance();
-        this.m_drivetrain = new DriveSubsystem(motorCfg);
-        this.m_vision = new VisionSubsystem(limelightTable, visionCfg);
+                // Initialize each of the subsystems
+                this.m_preferences = Preferences.getInstance();
+                this.m_drivetrain = new DriveSubsystem(motorCfg);
+                this.m_vision = new VisionSubsystem(limelightTable, visionCfg);
 
-        // Set up the controllers for the teleop command
-        this.m_leftDriverJoystick = new Joystick(0);
-        this.m_rightDriverJoystick = new Joystick(1);
+                // Set up the controllers for the teleop command
+                this.m_leftDriverJoystick = new Joystick(0);
+                this.m_rightDriverJoystick = new Joystick(1);
 
-        // Set up the buttons for the autonomous command
-        this.m_buttonbox = new Joystick(2);
-        this.m_activateAutonomousButton = new JoystickButton(this.m_buttonbox, 0);
+                // Set up the buttons for the autonomous command
+                this.m_buttonbox = new Joystick(2);
+                this.m_activateAutonomousButton = new JoystickButton(this.m_buttonbox, 0);
 
-        // Set up the actual teleop command
-        this.teleopCommand = new RhinoDriveCommand(this.m_drivetrain, () -> this.m_leftDriverJoystick.getRawAxis(0),
-                () -> this.m_rightDriverJoystick.getRawAxis(0));
+                // Set up the actual teleop command
+                this.teleopCommand = new RhinoDriveCommand(this.m_drivetrain,
+                                () -> this.m_leftDriverJoystick.getRawAxis(1),
+                                () -> this.m_rightDriverJoystick.getRawAxis(1));
 
-        // Set up the autonomous command
-        this.autonomousCommand = new MoveToReflectiveTargetCommand(this.m_drivetrain, this.m_vision,
-                new MoveToReflectiveTargetCommand.Configuration(
-                        () -> this.m_preferences.getDouble("vision::kP",
-                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION.getKp()),
-                        () -> this.m_preferences.getDouble("vision::errorTolerance",
-                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION.getErrorTolerance())));
+                // Set up the autonomous command
+                this.autonomousCommand = new MoveToReflectiveTargetCommand(this.m_drivetrain, this.m_vision,
+                                new MoveToReflectiveTargetCommand.Configuration(() -> this.m_preferences.getDouble(
+                                                "vision::kP",
+                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION.getKp()),
+                                                () -> this.m_preferences.getDouble("vision::errorTolerance",
+                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
+                                                                                .getErrorTolerance())));
 
-        // Configure the button bindings
-        configureButtonBindings();
-    }
+                // Configure the button bindings
+                configureButtonBindings();
+        }
 
-    /**
-     * Activates bindings to the autonomous command from the button box.
-     */
-    private void configureButtonBindings() {
-        // When the activate autonomous button is pushed, turn on the autonomous command
-        this.m_activateAutonomousButton.toggleWhenPressed(this.autonomousCommand);
-    }
+        /**
+         * Activates bindings to the autonomous command from the button box.
+         */
+        private void configureButtonBindings() {
+                // When the activate autonomous button is pushed, turn on the autonomous command
+                this.m_activateAutonomousButton.toggleWhenPressed(this.autonomousCommand);
+        }
 
-    /**
-     * Gets the currently selected teleop command for the robot.
-     * 
-     * @return the teleop command for the robot
-     */
-    public Command getTeleopCommand() {
-        // Return the robot's teleop command
-        return this.teleopCommand;
-    }
+        /**
+         * Gets the currently selected teleop command for the robot.
+         * 
+         * @return the teleop command for the robot
+         */
+        public Command getTeleopCommand() {
+                // Return the robot's teleop command
+                return this.teleopCommand;
+        }
 }
