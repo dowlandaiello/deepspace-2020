@@ -34,6 +34,18 @@
         },
         {
             "groupId": "com.ctre.phoenix",
+            "artifactId": "diagnostics",
+            "version": "5.17.6",
+            "isJar": false,
+            "skipInvalidPlatforms": true,
+            "validPlatforms": [
+                "linuxathena",
+                "windowsx86-64",
+                "linuxx86-64"
+            ]
+        },
+        {
+            "groupId": "com.ctre.phoenix",
             "artifactId": "canutils",
             "version": "5.17.6",
             "isJar": false,
@@ -50,6 +62,18 @@
             "isJar": false,
             "skipInvalidPlatforms": true,
             "validPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64"
+            ]
+        },
+        {
+            "groupId": "com.ctre.phoenix",
+            "artifactId": "core",
+            "version": "5.17.6",
+            "isJar": false,
+            "skipInvalidPlatforms": true,
+            "validPlatforms": [
+                "linuxathena",
                 "windowsx86-64",
                 "linuxx86-64"
             ]
@@ -100,6 +124,20 @@
         },
         {
             "groupId": "com.ctre.phoenix",
+            "artifactId": "diagnostics",
+            "version": "5.17.6",
+            "libName": "CTRE_PhoenixDiagnostics",
+            "headerClassifier": "headers",
+            "sharedLibrary": false,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena",
+                "windowsx86-64",
+                "linuxx86-64"
+            ]
+        },
+        {
+            "groupId": "com.ctre.phoenix",
             "artifactId": "canutils",
             "version": "5.17.6",
             "libName": "CTRE_PhoenixCanutils",
@@ -129,7 +167,14 @@
             "artifactId": "core",
             "version": "5.17.6",
             "libName": "CTRE_PhoenixCore",
-            "headerClassifier": "headers"
+            "headerClassifier": "headers",
+            "sharedLibrary": false,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena",
+                "windowsx86-64",
+                "linuxx86-64"
+            ]
         }
     ]
 }
