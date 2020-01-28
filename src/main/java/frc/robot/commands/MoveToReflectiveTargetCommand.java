@@ -75,6 +75,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
                 DoubleSupplier maximumSpeed, DoubleSupplier maximumTargetOffset) {
             // Set up the configuration using the given constraints
             this.kP = kP;
+            this.kChange = kChange;
             this.errorTolerance = errorTolerance;
             this.maximumSpeed = maximumSpeed;
             this.maximumTargetOffset = maximumTargetOffset;
