@@ -164,7 +164,8 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // If the offset is negative, compare it against the negative max number of
         // degrees. Otherwise, compare it against
         // the positive version.
-        return offset < 0 ? -(offset / -maxTargetOffset) : offset / maxTargetOffset;
+        return offset < 0 ? -Math.pow(offset / -maxTargetOffset, this.cfg.getkChange())
+                : Math.pow(offset / maxTargetOffset, this.cfg.getkChange());
     }
 
     /**
@@ -188,7 +189,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         double errorTolerance = this.cfg.errorTolerance.getAsDouble();
 
         // Calculate the rotational gain we need to drive with
-        double rotationalGain = Math.pow(kP * offsetX * this.cfg.getMaximumSpeed(), this.cfg.getkChange());
+        double rotationalGain = kP * offsetX * this.cfg.getMaximumSpeed();
 
         // Calculate the amount we need to move forward
         // double forwardGain = kP * offsetY;
