@@ -47,7 +47,7 @@ public class RhinoDriveCommand extends CommandBase {
     public void execute() {
         // Drive
         this.m_drivetrain
-                .drive(new double[] { -this.leftJoystickInput.getAsDouble(), -this.rightJoystickInput.getAsDouble() });
+                .drive(new double[] { this.leftJoystickInput.getAsDouble(), this.rightJoystickInput.getAsDouble() });
     }
 
     /**

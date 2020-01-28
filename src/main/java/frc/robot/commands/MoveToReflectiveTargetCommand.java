@@ -145,7 +145,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // If the offset is negative, compare it against the negative max number of
         // degrees. Otherwise, compare it against
         // the positive version.
-        return offset < 0 ? offset / -maxTargetOffset : offset / maxTargetOffset;
+        return offset < 0 ? -(offset / -maxTargetOffset) : offset / maxTargetOffset;
     }
 
     /**

@@ -87,7 +87,7 @@ public class RobotContainer {
 
                 // Set up the actual teleop command
                 this.teleopCommand = new RhinoDriveCommand(this.m_drivetrain,
-                                () -> this.m_leftDriverJoystick.getRawAxis(1),
+                                () -> -this.m_leftDriverJoystick.getRawAxis(1),
                                 () -> this.m_rightDriverJoystick.getRawAxis(1));
 
                 // Set up the autonomous command

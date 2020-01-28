@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
          */
         void drive(double leftPercentageSpeed, double rightPercentageSpeed) {
             // Set the two right motors to use the given percentage speed
-            this.frontLeftController.set(ControlMode.PercentOutput, leftPercentageSpeed);
+            this.frontLeftController.set(ControlMode.PercentOutput, -leftPercentageSpeed);
             this.frontRightController.set(ControlMode.PercentOutput, rightPercentageSpeed);
 
             // Set the back two controllers to use the same percentage output as the front
