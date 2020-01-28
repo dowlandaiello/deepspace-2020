@@ -97,7 +97,13 @@ public class RobotContainer {
                                                 Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION.getKp()),
                                                 () -> this.m_preferences.getDouble("vision::errorTolerance",
                                                                 Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
-                                                                                .getErrorTolerance())));
+                                                                                .getErrorTolerance()),
+                                                () -> this.m_preferences.getDouble("vision::maximumSpeed",
+                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
+                                                                                .getMaximumSpeed()),
+                                                () -> this.m_preferences.getDouble("vision::maximumTargetOffset",
+                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
+                                                                                .getMaximumTargetOffset())));
 
                 // Configure the button bindings
                 configureButtonBindings();

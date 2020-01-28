@@ -39,18 +39,37 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
          */
         DoubleSupplier errorTolerance;
 
+        /*
+         * The maximum speed that the robot will run during the execution of this
+         * command.
+         */
+        DoubleSupplier maximumSpeed;
+
+        /*
+         * The maximum number of degrees that a target may be offset from the center of
+         * the limelight view.
+         */
+        DoubleSupplier maximumTargetOffset;
+
         /**
          * Initializes a new Configuration for the MoveToReflectiveTarget command with
          * the given parameters.
          * 
-         * @param kP             the proportional value for this command's PID loop
-         * @param errorTolerance the acceptable range that the output of this command
-         *                       will be from the target value
+         * @param kP                  the proportional value for this command's PID loop
+         * @param errorTolerance      the acceptable range that the output of this
+         *                            command will be from the target value
+         * @param maximumSpeed        the maximum speed that the robot will run during
+         *                            the execution of this command
+         * @param maximumTargetOffset the maximum number of degrees that a target may be
+         *                            offset from the center of the limelight view
          */
-        public Configuration(DoubleSupplier kP, DoubleSupplier errorTolerance) {
+        public Configuration(DoubleSupplier kP, DoubleSupplier errorTolerance, DoubleSupplier maximumSpeed,
+                DoubleSupplier maximumTargetOffset) {
             // Set up the configuration using the given constraints
             this.kP = kP;
             this.errorTolerance = errorTolerance;
+            this.maximumSpeed = maximumSpeed;
+            this.maximumTargetOffset = maximumTargetOffset;
         }
 
         /**
@@ -72,8 +91,34 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
             // Return the configuration's current error tolerance variable
             return this.errorTolerance.getAsDouble();
         }
+
+        /**
+         * Gets the maximum speed that this command will run at.
+         * 
+         * @return the maximum speed at which the robot will run during the execution of
+         *         this command
+         */
+        public double getMaximumSpeed() {
+            // Return the configuration's maximum speed variable
+            return this.maximumSpeed.getAsDouble();
+        }
+
+        /**
+         * Gets the maximum number of degrees that a target may be offset from the
+         * center of the limelight view.
+         * 
+         * @return the maximum number of degrees that a target may be offset from the
+         *         center of the limelight view
+         */
+        public double getMaximumTargetOffset() {
+            // Return the configuration's maximum offset variable
+            return this.maximumTargetOffset.getAsDouble();
+        }
     }
 
+    /**
+     * Initializes a new MoveToReflectiveTargetCommand with the given constraints.
+     */
     public MoveToReflectiveTargetCommand(DriveSubsystem drivetrain, VisionSubsystem vision, Configuration cfg) {
         // Use the provided drive train, vision subsystem, and configuration classes
         this.m_drivetrain = drivetrain;
@@ -83,6 +128,24 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // Drivetrain and vision subsystems need to be established in order for this
         // command to work
         addRequirements(drivetrain, vision);
+    }
+
+    /**
+     * Calculates a target offset, considering a given maximum offset from the
+     * center of the limelight view, in conjunction with consideration to the
+     * value's status as a negative or positive value.
+     */
+    private double normalizeOffset(double offset) {
+        // Get the maximum number of degrees that the offset may be from the center.
+        // This represents the percentage, rather than the pure number of degrees, that
+        // the offset is from the center
+        // of the limelight view.
+        double maxTargetOffset = this.cfg.getMaximumTargetOffset();
+
+        // If the offset is negative, compare it against the negative max number of
+        // degrees. Otherwise, compare it against
+        // the positive version.
+        return offset < 0 ? offset / -maxTargetOffset : offset / maxTargetOffset;
     }
 
     /**
@@ -97,7 +160,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         }
 
         // Get the offset by which we need to move
-        double offsetX = this.m_vision.tx();
+        double offsetX = this.normalizeOffset(this.m_vision.tx());
         double offsetY = this.m_vision.ty();
 
         // Collect each of the required values (kP and errorTolerance) from the
@@ -106,7 +169,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         double errorTolerance = this.cfg.errorTolerance.getAsDouble();
 
         // Calculate the rotational gain we need to drive with
-        double rotationalGain = kP * offsetX;
+        double rotationalGain = kP * offsetX * this.cfg.getMaximumSpeed();
 
         // Calculate the amount we need to move forward
         // double forwardGain = kP * offsetY;
