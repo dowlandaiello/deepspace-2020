@@ -95,6 +95,9 @@ public class RobotContainer {
                                 new MoveToReflectiveTargetCommand.Configuration(() -> this.m_preferences.getDouble(
                                                 "vision::kP",
                                                 Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION.getKp()),
+                                                () -> this.m_preferences.getDouble("vision::kChange",
+                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
+                                                                                .getkChange()),
                                                 () -> this.m_preferences.getDouble("vision::errorTolerance",
                                                                 Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
                                                                                 .getErrorTolerance()),

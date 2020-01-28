@@ -15,7 +15,7 @@ import frc.robot.commands.MoveToReflectiveTargetCommand;
 public final class Constants {
     /* Default values for the MoveToReflectiveTargetCommand configuration. */
     public static MoveToReflectiveTargetCommand.Configuration DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION = new MoveToReflectiveTargetCommand.Configuration(
-            () -> 1.0, () -> 0.25, () -> 0.75, () -> 30.0);
+            () -> 1.0, () -> 0.4, () -> 0.25, () -> 0.75, () -> 30.0);
 
     /* Definitions for different motor device numbers */
     public static int FRONTLEFTMOTOR = 3;

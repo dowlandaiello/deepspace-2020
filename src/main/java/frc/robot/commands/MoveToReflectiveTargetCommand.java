@@ -34,6 +34,12 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         DoubleSupplier kP;
 
         /*
+         * A multiplier for the final output value of the command's PID loop. Applied as
+         * output^kChange.
+         */
+        DoubleSupplier kChange;
+
+        /*
          * The tolerance to error in this command's PID loop. This is the amount that
          * the error vlaue can deviate from the target value.
          */
@@ -56,6 +62,8 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
          * the given parameters.
          * 
          * @param kP                  the proportional value for this command's PID loop
+         * @param kChange             a multiplier for the final output value of the
+         *                            command's PID loop
          * @param errorTolerance      the acceptable range that the output of this
          *                            command will be from the target value
          * @param maximumSpeed        the maximum speed that the robot will run during
@@ -63,8 +71,8 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
          * @param maximumTargetOffset the maximum number of degrees that a target may be
          *                            offset from the center of the limelight view
          */
-        public Configuration(DoubleSupplier kP, DoubleSupplier errorTolerance, DoubleSupplier maximumSpeed,
-                DoubleSupplier maximumTargetOffset) {
+        public Configuration(DoubleSupplier kP, DoubleSupplier kChange, DoubleSupplier errorTolerance,
+                DoubleSupplier maximumSpeed, DoubleSupplier maximumTargetOffset) {
             // Set up the configuration using the given constraints
             this.kP = kP;
             this.errorTolerance = errorTolerance;
@@ -113,6 +121,16 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         public double getMaximumTargetOffset() {
             // Return the configuration's maximum offset variable
             return this.maximumTargetOffset.getAsDouble();
+        }
+
+        /**
+         * Gets the kChange value for this command's config.
+         * 
+         * @return the kChange for the command
+         */
+        public double getkChange() {
+            // Return the kChange
+            return this.kChange.getAsDouble();
         }
     }
 
@@ -169,7 +187,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         double errorTolerance = this.cfg.errorTolerance.getAsDouble();
 
         // Calculate the rotational gain we need to drive with
-        double rotationalGain = kP * offsetX * this.cfg.getMaximumSpeed();
+        double rotationalGain = Math.pow(kP * offsetX * this.cfg.getMaximumSpeed(), this.cfg.getkChange());
 
         // Calculate the amount we need to move forward
         // double forwardGain = kP * offsetY;
