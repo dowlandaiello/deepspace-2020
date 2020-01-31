@@ -48,11 +48,6 @@ public class DriveSubsystem extends SubsystemBase {
             this.frontRightController = new WPI_TalonSRX(frontRightControllerPort);
             this.backLeftController = new WPI_TalonSRX(backLeftControllerPort);
             this.backRightController = new WPI_TalonSRX(backRightControllerPort);
-
-            // Use the left and right side of the motor for the differential drive command
-            // diffDrive
-            this.diffDrive = new DifferentialDrive(this.left, this.right);
-            this.diffDrive.setRightSideInverted(false);
         }
 
         /**
