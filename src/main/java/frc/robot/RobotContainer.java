@@ -97,7 +97,7 @@ public class RobotContainer {
                 // Set up an alternative teleop command that uses arcade drive; use just one
                 // joystick
                 this.fallbackTeleopCommand = new DifferentialDriveCommand(this.m_drivetrain,
-                                () -> this.m_leftDriverJoystick.getRawAxis(0),
+                                () -> this.m_leftDriverJoystick.getRawAxis(1),
                                 () -> this.m_leftDriverJoystick.getRawAxis(2));
 
                 // Set up the autonomous command
