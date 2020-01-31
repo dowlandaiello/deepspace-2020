@@ -11,6 +11,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.Type;
 
 /**
  * An example command that uses an example subsystem.
@@ -46,12 +47,12 @@ public class RhinoDriveCommand extends CommandBase {
     @Override
     public void execute() {
         // Drive
-        this.m_drivetrain
-                .drive(new double[] { this.leftJoystickInput.getAsDouble(), this.rightJoystickInput.getAsDouble() });
+        this.m_drivetrain.drive(Type.RHINO,
+                new double[] { this.leftJoystickInput.getAsDouble(), this.rightJoystickInput.getAsDouble() });
     }
 
     /**
-     * Returns whether or not the command as finished executing.
+     * Returns whether or not the command has finished executing.
      * 
      * @return whether or not the command has completed
      */

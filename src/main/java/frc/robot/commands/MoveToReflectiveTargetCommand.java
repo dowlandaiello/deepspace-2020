@@ -5,13 +5,14 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.DriveSubsystem.Type;
 
 /**
  * Moves the robot to a reflective target, within a specified distance from the
  * target.
  *
  * @author Dowland Aiello
- **/
+ */
 public class MoveToReflectiveTargetCommand extends CommandBase {
     /* The drivetrain that we'll use to run the MoveToReflectiiveTarget command. */
     private final DriveSubsystem m_drivetrain;
@@ -197,7 +198,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // Check if we need to correct for X at all
         if (Math.abs(offsetX) > errorTolerance) {
             // Drive to correct for the X
-            this.m_drivetrain.drive(new double[] { rotationalGain, -rotationalGain });
+            this.m_drivetrain.drive(Type.RHINO, new double[] { rotationalGain, -rotationalGain });
         } else if (Math.abs(offsetY) > errorTolerance) {
             // this.m_drivetrain.drive(new double[] { forwardGain, forwardGain });
         }

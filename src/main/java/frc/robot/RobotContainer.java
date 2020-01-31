@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
+import frc.robot.commands.DifferentialDriveCommand;
 import frc.robot.commands.MoveToReflectiveTargetCommand;
 import frc.robot.commands.RhinoDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -53,6 +54,9 @@ public class RobotContainer {
         /* The current teleOp command for the robot. */
         private final RhinoDriveCommand teleopCommand;
 
+        /* A fallback teleOp command for the robot (arcade drive). */
+        private final DifferentialDriveCommand fallbackTeleopCommand;
+
         /* The current autonomous command for the robot. */
         private final MoveToReflectiveTargetCommand autonomousCommand;
 
@@ -90,6 +94,12 @@ public class RobotContainer {
                                 () -> -this.m_leftDriverJoystick.getRawAxis(1),
                                 () -> this.m_rightDriverJoystick.getRawAxis(1));
 
+                // Set up an alternative teleop command that uses arcade drive; use just one
+                // joystick
+                this.fallbackTeleopCommand = new DifferentialDriveCommand(this.m_drivetrain,
+                                () -> this.m_leftDriverJoystick.getRawAxis(0),
+                                () -> this.m_leftDriverJoystick.getRawAxis(1));
+
                 // Set up the autonomous command
                 this.autonomousCommand = new MoveToReflectiveTargetCommand(this.m_drivetrain, this.m_vision,
                                 new MoveToReflectiveTargetCommand.Configuration(() -> this.m_preferences.getDouble(
@@ -126,7 +136,12 @@ public class RobotContainer {
          * @return the teleop command for the robot
          */
         public Command getTeleopCommand() {
+                // Check if we should be using rhino drive or arcade drivie
+                if (this.m_preferences.getBoolean("drive::useRhino", true)) {
+                        return this.teleopCommand; // Use a standard rhino command
+                }
+
                 // Return the robot's teleop command
-                return this.teleopCommand;
+                return this.fallbackTeleopCommand;
         }
 }
