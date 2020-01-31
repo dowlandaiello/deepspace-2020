@@ -56,20 +56,20 @@ public class DriveSubsystem extends SubsystemBase {
         void drive(Type driveType, double leftPercentageSpeed, double rightPercentageSpeed) {
             if (driveType.equals(Type.DIFFERENTIAL)) {
                 // Treat the rightPercentageSpeed as a rotational parameter
-                this.frontLeftController.set(ControlMode.PercentOutput, -leftPercentageSpeed,
+                this.frontLeftController.set(ControlMode.PercentOutput, leftPercentageSpeed,
                         DemandType.ArbitraryFeedForward, rightPercentageSpeed);
                 this.backLeftController.follow(this.frontLeftController);
 
-                this.frontRightController.set(ControlMode.PercentOutput, -leftPercentageSpeed,
+                this.frontRightController.set(ControlMode.PercentOutput, leftPercentageSpeed,
                         DemandType.ArbitraryFeedForward, rightPercentageSpeed);
                 this.backRightController.follow(this.frontRightController);
             }
 
-            this.frontLeftController.set(-leftPercentageSpeed);
-            this.backLeftController.set(-leftPercentageSpeed);
+            this.frontLeftController.set(leftPercentageSpeed);
+            this.backLeftController.follow(this.frontLeftController);
 
-            this.frontRightController.set(-rightPercentageSpeed);
-            this.backRightController.set(-rightPercentageSpeed);
+            this.frontRightController.set(rightPercentageSpeed);
+            this.backRightController.follow(this.frontRightController);
 
             return;
         }
