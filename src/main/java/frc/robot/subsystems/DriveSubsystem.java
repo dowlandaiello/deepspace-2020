@@ -51,27 +51,33 @@ public class DriveSubsystem extends SubsystemBase {
             // Use the left and right side of the motor for the differential drive command
             // diffDrive
             this.diffDrive = new DifferentialDrive(this.left, this.right);
+            this.diffDrive.setRightSideInverted(false);
         }
 
         /**
          * Drives the robot according to a left and right percentage speed.
          * 
-         * @param driveType            the manner in which the robot will drive
          * @param leftPercentageSpeed  the desired speed of the left motor controllers
          * @param rightPercentageSpeed the desired speed of the right motor controllers
          */
-        void drive(Type driveType, double leftPercentageSpeed, double rightPercentageSpeed) {
-            if (driveType == Type.RHINO) {
-                // Set the left and riight side of the robot to move the desired speeds
-                this.left.set(-leftPercentageSpeed);
-                this.right.set(-rightPercentageSpeed);
+        void drive(double leftPercentageSpeed, double rightPercentageSpeed) {
+            // Set the left and riight side of the robot to move the desired speeds
+            this.left.set(-leftPercentageSpeed);
+            this.right.set(-rightPercentageSpeed);
 
-                return;
-            }
+            return;
+        }
 
-            // Consider the provided percentage speeds as simply inputs from the x and z
-            // axis
-            this.diffDrive.arcadeDrive(-leftPercentageSpeed, -rightPercentageSpeed);
+        /**
+         * Drives the robot differentially.
+         * 
+         * @param xInput
+         * @param yInput
+         * @param zInput
+         */
+        void drive(double xInput, double yInput, double zInput) {
+            this.diffDrive.setMaxOutput(((zInput - 1) / 2) * (-1));
+            this.diffDrive.arcadeDrive(-yInput, -xInput);
         }
     }
 
@@ -93,7 +99,14 @@ public class DriveSubsystem extends SubsystemBase {
      * @param percentageSpeeds the percentage speed values to drive with
      */
     public void drive(Type driveType, double[] percentageSpeeds) {
-        // Drive the robot
-        this.motorControllers.drive(driveType, percentageSpeeds[0], percentageSpeeds[1]);
+        if (driveType.equals(Type.RHINO)) {
+            // Drive the robot
+            this.motorControllers.drive(percentageSpeeds[0], percentageSpeeds[1]);
+
+            return;
+        }
+
+        // Use differential drive to drive the robot
+        this.motorControllers.drive(percentageSpeeds[0], percentageSpeeds[1], percentageSpeeds[2]);
     }
 }
