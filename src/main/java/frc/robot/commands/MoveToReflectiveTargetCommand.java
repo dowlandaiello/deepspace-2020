@@ -204,4 +204,14 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
             this.m_drivetrain.drive(Type.RHINO, new double[] { forwardGain, forwardGain });
         }
     }
+
+    /**
+     * Returns whether or not the command has finished executing.
+     * 
+     * @return whether or not the command has completed
+     */
+    @Override
+    public boolean isFinished() {
+        return !this.m_vision.hasTarget();
+    }
 }
