@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DriveSubsystem.Type;
@@ -22,6 +23,9 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
 
     /* A configuration for this command. */
     private final Configuration cfg;
+
+    /* The number of frames since the command has lacked a target. */
+    private int nTargetlessFrames;
 
     /**
      * Configuration represents a configuration for the MoveToReflectiveTarget
@@ -177,8 +181,14 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // If there isn't a target in our field of view, we don't need to do any more
         // work
         if (!this.m_vision.hasTarget()) {
+            // Increaseee the targetless frames counter
+            this.nTargetlessFrames++;
+
             return;
         }
+
+        // Reset the targetless frames counter
+        this.nTargetlessFrames = 0;
 
         // Get the offset by which we need to move
         double offsetX = this.normalizeOffset(this.m_vision.tx());
@@ -212,6 +222,10 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return !this.m_vision.hasTarget();
+        // If there aren't any targets, we're done. Or, if we've moved to the target,
+        // we're done.
+        return (!this.m_vision.hasTarget() && this.nTargetlessFrames == Constants.TARGETLESS_FRAMES_TO_VISION_STOP)
+                || (this.m_vision.hasTarget() && this.m_vision.tx() < this.cfg.errorTolerance.getAsDouble()
+                        && this.m_vision.ty() < this.cfg.errorTolerance.getAsDouble());
     }
 }

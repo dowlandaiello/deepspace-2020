@@ -37,6 +37,12 @@ public final class Constants {
     /* The degree radius of the vision camera. */
     public static double DEFAULT_VISION_BOUNDS = 30.0;
 
+    /*
+     * The number of calls to the vision command in which there must not be a target
+     * for the command to be stopped.
+     */
+    public static int TARGETLESS_FRAMES_TO_VISION_STOP = 10;
+
     /* Definitions for different motor device numbers */
     public static int FRONTLEFTMOTOR = 3;
     public static int BACKLEFTMOTOR = 2;
