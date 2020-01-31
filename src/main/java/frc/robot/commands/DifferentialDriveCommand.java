@@ -17,22 +17,22 @@ public class DifferentialDriveCommand extends CommandBase {
     private final DriveSubsystem m_drivetrain;
 
     /* The x and y axis inputs from the joystick. */
-    private final DoubleSupplier xInput, yInput;
+    private final DoubleSupplier xInput, zInput;
 
     /**
      * Crates a new DifferentialDriveCommand.
      * 
      * @param drivetrain the subsystem used by this command
      * @param xInput     input from the x axis of the input joystick
-     * @param yInput     input from the y axis of the input joystick
+     * @param zInput     rotational input from the z axis of the input joystick
      */
-    public DifferentialDriveCommand(DriveSubsystem drivetrain, DoubleSupplier xInput, DoubleSupplier yInput) {
+    public DifferentialDriveCommand(DriveSubsystem drivetrain, DoubleSupplier xInput, DoubleSupplier zInput) {
         // Use the provided drivetrain
         this.m_drivetrain = drivetrain;
 
         // Use the axis inputs that the user provided
         this.xInput = xInput;
-        this.yInput = yInput;
+        this.zInput = zInput;
     }
 
     /**
@@ -42,7 +42,7 @@ public class DifferentialDriveCommand extends CommandBase {
     public void execute() {
         // Drive the drivetrain with a differential drive config
         this.m_drivetrain.drive(Type.DIFFERENTIAL,
-                new double[] { this.xInput.getAsDouble(), this.yInput.getAsDouble() });
+                new double[] { this.xInput.getAsDouble(), this.zInput.getAsDouble() });
     }
 
     /**

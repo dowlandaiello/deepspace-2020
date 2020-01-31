@@ -64,14 +64,14 @@ public class DriveSubsystem extends SubsystemBase {
             if (driveType == Type.RHINO) {
                 // Set the left and riight side of the robot to move the desired speeds
                 this.left.set(-leftPercentageSpeed);
-                this.right.set(rightPercentageSpeed);
+                this.right.set(-rightPercentageSpeed);
 
                 return;
             }
 
             // Consider the provided percentage speeds as simply inputs from the x and z
             // axis
-            this.diffDrive.arcadeDrive(leftPercentageSpeed, rightPercentageSpeed);
+            this.diffDrive.arcadeDrive(-leftPercentageSpeed, -rightPercentageSpeed);
         }
     }
 

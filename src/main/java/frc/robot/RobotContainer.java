@@ -91,14 +91,14 @@ public class RobotContainer {
 
                 // Set up the actual teleop command
                 this.teleopCommand = new RhinoDriveCommand(this.m_drivetrain,
-                                () -> -this.m_leftDriverJoystick.getRawAxis(1),
+                                () -> this.m_leftDriverJoystick.getRawAxis(1),
                                 () -> this.m_rightDriverJoystick.getRawAxis(1));
 
                 // Set up an alternative teleop command that uses arcade drive; use just one
                 // joystick
                 this.fallbackTeleopCommand = new DifferentialDriveCommand(this.m_drivetrain,
                                 () -> this.m_leftDriverJoystick.getRawAxis(0),
-                                () -> this.m_leftDriverJoystick.getRawAxis(1));
+                                () -> this.m_leftDriverJoystick.getRawAxis(2));
 
                 // Set up the autonomous command
                 this.autonomousCommand = new MoveToReflectiveTargetCommand(this.m_drivetrain, this.m_vision,
