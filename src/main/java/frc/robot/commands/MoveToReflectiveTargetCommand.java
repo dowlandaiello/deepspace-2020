@@ -199,17 +199,17 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         double kP = this.cfg.kP.getAsDouble();
         double errorTolerance = this.cfg.errorTolerance.getAsDouble();
 
-        // Calculate the rotational gain we need to drive with
-        double rotationalGain = kP * offsetX * this.cfg.getMaximumSpeed();
-
-        // Calculate the amount we need to move forward
-        double forwardGain = kP * offsetY * this.cfg.getMaximumSpeed();
-
         // Check if we need to correct for X at all
         if (Math.abs(offsetX) > errorTolerance) {
+            // Calculate the rotational gain we need to drive with
+            double rotationalGain = kP * offsetX * this.cfg.getMaximumSpeed();
+
             // Drive to correct for the X
             this.m_drivetrain.drive(Type.RHINO, new double[] { rotationalGain, -rotationalGain });
         } else if (Math.abs(offsetY) > errorTolerance) {
+            // Calculate the amount we need to move forward
+            double forwardGain = kP * offsetY * this.cfg.getMaximumSpeed();
+
             // Drive to correct for the Y
             this.m_drivetrain.drive(Type.RHINO, new double[] { forwardGain, forwardGain });
         }
