@@ -7,15 +7,35 @@
 
 package frc.robot;
 
-import frc.robot.commands.MoveToReflectiveTargetCommand;
-
 /**
  * Constants holds a list of robot-wide constant definitions.
  */
 public final class Constants {
-    /* Default values for the MoveToReflectiveTargetCommand configuration. */
-    public static MoveToReflectiveTargetCommand.Configuration DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION = new MoveToReflectiveTargetCommand.Configuration(
-            () -> 1.0, () -> 0.4, () -> 0.25, () -> 0.75, () -> 30.0);
+    /*
+     * The default multiplier for the distance moved in the
+     * MoveToReflectiveTargetCommand.
+     */
+    public static double DEFAULT_VISION_KP = 1.0;
+
+    /*
+     * A secondary multiplier for the distance moved in the
+     * MoveToReflectiveTargetCommand. This multiplier is applied in a logarithmic
+     * fashion. For example, a value of 0.4 causes the robot to slow down as it
+     * reaches the target output.
+     */
+    public static double DEFAULT_VISION_KCHANGE = 0.4;
+
+    /*
+     * The default number of degrees that a target may be from the center of the
+     * vision camera's view.
+     */
+    public static double DEFAULT_VISION_ERROR_TOLERANCE = 0.25;
+
+    /* The maximum speed of the vision command. */
+    public static double DEFAULT_VISION_MAX_SPEED = 0.75;
+
+    /* The degree radius of the vision camera. */
+    public static double DEFAULT_VISION_BOUNDS = 30.0;
 
     /* Definitions for different motor device numbers */
     public static int FRONTLEFTMOTOR = 3;

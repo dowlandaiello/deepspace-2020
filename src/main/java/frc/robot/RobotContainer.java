@@ -102,21 +102,17 @@ public class RobotContainer {
 
                 // Set up the autonomous command
                 this.autonomousCommand = new MoveToReflectiveTargetCommand(this.m_drivetrain, this.m_vision,
-                                new MoveToReflectiveTargetCommand.Configuration(() -> this.m_preferences.getDouble(
-                                                "vision::kP",
-                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION.getKp()),
+                                new MoveToReflectiveTargetCommand.Configuration(
+                                                () -> this.m_preferences.getDouble("vision::kP",
+                                                                Constants.DEFAULT_VISION_KP),
                                                 () -> this.m_preferences.getDouble("vision::kChange",
-                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
-                                                                                .getkChange()),
+                                                                Constants.DEFAULT_VISION_KCHANGE),
                                                 () -> this.m_preferences.getDouble("vision::errorTolerance",
-                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
-                                                                                .getErrorTolerance()),
+                                                                Constants.DEFAULT_VISION_ERROR_TOLERANCE),
                                                 () -> this.m_preferences.getDouble("vision::maximumSpeed",
-                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
-                                                                                .getMaximumSpeed()),
+                                                                Constants.DEFAULT_VISION_MAX_SPEED),
                                                 () -> this.m_preferences.getDouble("vision::maximumTargetOffset",
-                                                                Constants.DEFAULTMOVETOREFLECTIVETARGETCOMMANDCONFIGURATION
-                                                                                .getMaximumTargetOffset())));
+                                                                Constants.DEFAULT_VISION_BOUNDS)));
 
                 // Configure the button bindings
                 configureButtonBindings();
