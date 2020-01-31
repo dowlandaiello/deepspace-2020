@@ -1,7 +1,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.Talon;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,7 +25,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public static class MotorControllerConfiguration {
         /* The front left motor controller */
-        Talon frontLeftController, frontRightController, backLeftController, backRightController;
+        WPI_TalonSRX frontLeftController, frontRightController, backLeftController, backRightController;
 
         /* Controller groups for the left and right sides of the robot */
         SpeedControllerGroup right, left;
@@ -40,13 +44,10 @@ public class DriveSubsystem extends SubsystemBase {
         public MotorControllerConfiguration(int frontLeftControllerPort, int frontRightControllerPort,
                 int backLeftControllerPort, int backRightControllerPort) {
             // Initialize each of the talons
-            this.frontLeftController = new Talon(frontLeftControllerPort);
-            this.frontRightController = new Talon(frontRightControllerPort);
-            this.backLeftController = new Talon(backLeftControllerPort);
-            this.backRightController = new Talon(backRightControllerPort);
-
-            this.left = new SpeedControllerGroup(this.frontLeftController, this.backLeftController);
-            this.right = new SpeedControllerGroup(this.frontRightController, this.backRightController);
+            this.frontLeftController = new WPI_TalonSRX(frontLeftControllerPort);
+            this.frontRightController = new WPI_TalonSRX(frontRightControllerPort);
+            this.backLeftController = new WPI_TalonSRX(backLeftControllerPort);
+            this.backRightController = new WPI_TalonSRX(backRightControllerPort);
 
             // Use the left and right side of the motor for the differential drive command
             // diffDrive
@@ -56,28 +57,30 @@ public class DriveSubsystem extends SubsystemBase {
 
         /**
          * Drives the robot according to a left and right percentage speed.
-         * 
+         *
+         * @param driveType            the type of drive to use
          * @param leftPercentageSpeed  the desired speed of the left motor controllers
          * @param rightPercentageSpeed the desired speed of the right motor controllers
          */
-        void drive(double leftPercentageSpeed, double rightPercentageSpeed) {
-            // Set the left and riight side of the robot to move the desired speeds
-            this.left.set(-leftPercentageSpeed);
-            this.right.set(-rightPercentageSpeed);
+        void drive(Type driveType, double leftPercentageSpeed, double rightPercentageSpeed) {
+            if (driveType.equals(Type.DIFFERENTIAL)) {
+                // Treat the rightPercentageSpeed as a rotational parameter
+                this.frontLeftController.set(ControlMode.PercentOutput, -leftPercentageSpeed,
+                        DemandType.ArbitraryFeedForward, rightPercentageSpeed);
+                this.backLeftController.follow(this.frontLeftController);
+
+                this.frontRightController.set(ControlMode.PercentOutput, -leftPercentageSpeed,
+                        DemandType.ArbitraryFeedForward, rightPercentageSpeed);
+                this.backRightController.follow(this.frontRightController);
+            }
+
+            this.frontLeftController.set(-leftPercentageSpeed);
+            this.backLeftController.set(-leftPercentageSpeed);
+
+            this.frontRightController.set(-rightPercentageSpeed);
+            this.backRightController.set(-rightPercentageSpeed);
 
             return;
-        }
-
-        /**
-         * Drives the robot differentially.
-         * 
-         * @param xInput
-         * @param yInput
-         * @param zInput
-         */
-        void drive(double xInput, double yInput, double zInput) {
-            this.diffDrive.setMaxOutput(((zInput - 1) / 2) * (-1));
-            this.diffDrive.arcadeDrive(-yInput, -xInput);
         }
     }
 
@@ -101,12 +104,12 @@ public class DriveSubsystem extends SubsystemBase {
     public void drive(Type driveType, double[] percentageSpeeds) {
         if (driveType.equals(Type.RHINO)) {
             // Drive the robot
-            this.motorControllers.drive(percentageSpeeds[0], percentageSpeeds[1]);
+            this.motorControllers.drive(Type.RHINO, percentageSpeeds[0], percentageSpeeds[1]);
 
             return;
         }
 
         // Use differential drive to drive the robot
-        this.motorControllers.drive(percentageSpeeds[0], percentageSpeeds[1], percentageSpeeds[2]);
+        this.motorControllers.drive(Type.DIFFERENTIAL, percentageSpeeds[0], percentageSpeeds[1]);
     }
 }
