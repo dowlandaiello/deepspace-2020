@@ -182,7 +182,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
 
         // Get the offset by which we need to move
         double offsetX = this.normalizeOffset(this.m_vision.tx());
-        double offsetY = this.m_vision.ty();
+        double offsetY = this.normalizeOffset(this.m_vision.ty());
 
         // Collect each of the required values (kP and errorTolerance) from the
         // dashboard
@@ -193,14 +193,15 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         double rotationalGain = kP * offsetX * this.cfg.getMaximumSpeed();
 
         // Calculate the amount we need to move forward
-        // double forwardGain = kP * offsetY;
+        double forwardGain = kP * offsetY * this.cfg.getMaximumSpeed();
 
         // Check if we need to correct for X at all
         if (Math.abs(offsetX) > errorTolerance) {
             // Drive to correct for the X
             this.m_drivetrain.drive(Type.RHINO, new double[] { rotationalGain, -rotationalGain });
         } else if (Math.abs(offsetY) > errorTolerance) {
-            // this.m_drivetrain.drive(new double[] { forwardGain, forwardGain });
+            // Drive to correct for the Y
+            this.m_drivetrain.drive(Type.RHINO, new double[] { forwardGain, forwardGain });
         }
     }
 }
