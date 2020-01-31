@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -29,9 +28,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         /* Controller groups for the left and right sides of the robot */
         SpeedControllerGroup right, left;
-
-        /* A DifferentialDrive instance for the motor controller config */
-        private DifferentialDrive diffDrive;
 
         /**
          * Initializes a new MotorControllerConfiguration with the given ports.
