@@ -43,9 +43,6 @@ public class RobotContainer {
     /* The driver's joystick. */
     private final Joystick m_leftDriverJoystick, m_rightDriverJoystick;
 
-    /* The button box. */
-    private final Joystick m_buttonbox;
-
     /* The button on the button box used to activate the autonomous command. */
     private final JoystickButton m_activateAutonomousButton;
 
@@ -86,8 +83,7 @@ public class RobotContainer {
         this.m_rightDriverJoystick = new Joystick(1);
 
         // Set up the buttons for the autonomous command
-        this.m_buttonbox = new Joystick(2);
-        this.m_activateAutonomousButton = new JoystickButton(this.m_buttonbox, 1);
+        this.m_activateAutonomousButton = new JoystickButton(this.m_leftDriverJoystick, 1);
 
         // Set up the actual teleop command
         this.teleopCommand = new RhinoDriveCommand(this.m_drivetrain,
