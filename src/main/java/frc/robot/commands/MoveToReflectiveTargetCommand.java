@@ -122,7 +122,8 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
          * @return the offset values contained inside the state
          **/
         public double[] getOffsets() {
-            return new double[] {this.targetOffsets.get(0).getAverage(), this.targetOffsets.get(1).getAverage(), this.targetOffsets.get(2).getAverage()};
+            return new double[] { this.targetOffsets.get(0).getAverage(), this.targetOffsets.get(1).getAverage(),
+                    this.targetOffsets.get(2).getAverage() };
         }
 
         /**
@@ -138,7 +139,9 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
          * Checks whether or not the target has been acquired.
          **/
         public boolean hasFinished(double errorTolerance) {
-            return this.currentFrame > this.maxFrames / 2 && !(this.needsCorrectionOnAxis(Axis.X, errorTolerance) || this.needsCorrectionOnAxis(Axis.Y, errorTolerance) || this.needsCorrectionOnAxis(Axis.Z, errorTolerance));
+            return this.currentFrame > this.maxFrames / 2 && !(this.needsCorrectionOnAxis(Axis.X, errorTolerance)
+                    || this.needsCorrectionOnAxis(Axis.Y, errorTolerance)
+                    || this.needsCorrectionOnAxis(Axis.Z, errorTolerance));
         }
 
         /**
@@ -149,16 +152,19 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         public boolean needsCorrectionOnAxis(Axis axis, double errorTolerance) {
             switch (axis) {
             case X:
-                return this.targetOffsets.get(0).getAverage() / Constants.DEFAULT_VISION_BOUNDS[0] > errorTolerance;
+                return Math.abs(this.targetOffsets.get(0).getAverage())
+                        / Constants.DEFAULT_VISION_BOUNDS[0] > errorTolerance;
             case Y:
-                return this.targetOffsets.get(1).getAverage() / Constants.DEFAULT_VISION_BOUNDS[1] > errorTolerance;
+                return Math.abs(this.targetOffsets.get(1).getAverage())
+                        / Constants.DEFAULT_VISION_BOUNDS[1] > errorTolerance;
             default:
                 return Constants.DEFAULT_VISION_BOUNDS[2] - this.targetOffsets.get(2).getAverage() > errorTolerance;
             }
         }
 
         /**
-         * Entry represents a generic state entry for the command. This used to represent historical values for the command.
+         * Entry represents a generic state entry for the command. This used to
+         * represent historical values for the command.
          **/
         private static class Entry<T extends Comparable<T>> {
             /* The type of the entry. */
@@ -195,7 +201,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
                 /* The average offset along the X axis over the specified number of frames. */
                 AVERAGE_ROTATIONAL_OFFSET,
 
-                /* The average offset along the Z axis over the specified number of frames.  */
+                /* The average offset along the Z axis over the specified number of frames. */
                 AVERAGE_ZED_DISTANCE_OFFSET,
 
                 /* The average offset along the Y axis over the specified number of frames. */
@@ -225,7 +231,8 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
             }
 
             /**
-             * Gets the average of the historical values stored in the entry through the respective average mode.
+             * Gets the average of the historical values stored in the entry through the
+             * respective average mode.
              *
              * @return the mean of the historical values stored in the entry
              **/
@@ -255,6 +262,9 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
             public void push(T value) {
                 // Increment the frequency for the value provided
                 this.frequencies.put(value, this.frequencies.getOrDefault(value, 0) + 1);
+
+                // Add the value into the set of historical values contained in the state entry
+                this.historicalValues.add(value);
 
                 // Recalculate the mode for the entry
                 if (this.mode == null || this.frequencies.get(value) > this.frequencies.getOrDefault(mode, 0)) {
@@ -297,16 +307,16 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
          * Initializes a new Configuration for the MoveToReflectiveTarget command with
          * the given parameters.
          *
-         * @param kP                  the proportional value for this command's PID loop
-         * @param kChange             a multiplier for the final output value of the
-         *                            command's PID loop
-         * @param errorTolerance      the acceptable range that the output of this
-         *                            command will be from the target value
-         * @param maximumSpeed        the maximum speed that the robot will run during
-         *                            the execution of this command
+         * @param kP             the proportional value for this command's PID loop
+         * @param kChange        a multiplier for the final output value of the
+         *                       command's PID loop
+         * @param errorTolerance the acceptable range that the output of this command
+         *                       will be from the target value
+         * @param maximumSpeed   the maximum speed that the robot will run during the
+         *                       execution of this command
          */
         public Configuration(DoubleSupplier kP, DoubleSupplier kChange, DoubleSupplier errorTolerance,
-                             DoubleSupplier maximumSpeed) {
+                DoubleSupplier maximumSpeed) {
             // Set up the configuration using the given constraints
             this.kP = kP;
             this.kChange = kChange;
@@ -396,8 +406,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // If the offset is negative, compare it against the negative max number of
         // degrees. Otherwise, compare it against
         // the positive version.
-        return offset < 0 ? -Math.pow(offset, this.cfg.getkChange())
-               : Math.pow(offset, this.cfg.getkChange());
+        return offset < 0 ? -Math.pow(offset, this.cfg.getkChange()) : Math.pow(offset, this.cfg.getkChange());
     }
 
     /**
@@ -406,7 +415,8 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
     @Override
     public void execute() {
         // Update the state of the command
-        this.state.putValues(new double[] {this.m_vision.tx(), this.m_vision.ty(), this.m_vision.ta()}, this.m_vision.hasTarget());
+        this.state.putValues(new double[] { this.m_vision.tx(), this.m_vision.ty(), this.m_vision.ta() },
+                this.m_vision.hasTarget());
 
         // Get each of the offset values from the limelight
         double[] offsets = this.state.getOffsets();
@@ -425,19 +435,19 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
             double gain = this.cfg.getKp() * offsets[0] * this.cfg.getMaximumSpeed();
 
             // Spin in one spot using the provided gain variable
-            this.m_drivetrain.drive(Type.RHINO, new double[] {-gain, gain});
+            this.m_drivetrain.drive(Type.RHINO, new double[] { -gain, gain });
         } else if (this.state.needsCorrectionOnAxis(Axis.Z, this.cfg.getErrorTolerance())) {
             // Calculate the gain with the z offset
             double gain = this.cfg.getKp() * offsets[2] * this.cfg.getMaximumSpeed();
 
             // Move forward and back using the gain variable
-            this.m_drivetrain.drive(Type.RHINO, new double[] {gain, gain});
+            this.m_drivetrain.drive(Type.RHINO, new double[] { gain, gain });
         } else if (this.state.needsCorrectionOnAxis(Axis.Y, this.cfg.getErrorTolerance())) {
             // Calculate the gain with the y offset
             double gain = this.cfg.getKp() * offsets[1] * this.cfg.getMaximumSpeed();
 
             // Move forward and back using the gain variable
-            this.m_drivetrain.drive(Type.RHINO, new double[] {gain, gain});
+            this.m_drivetrain.drive(Type.RHINO, new double[] { gain, gain });
         }
     }
 
