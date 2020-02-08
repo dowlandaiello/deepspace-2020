@@ -61,11 +61,11 @@ public class DriveSubsystem extends SubsystemBase {
                 this.backLeftController.follow(this.frontLeftController);
 
                 this.frontRightController.set(ControlMode.PercentOutput, leftPercentageSpeed,
-                        DemandType.ArbitraryFeedForward, rightPercentageSpeed);
+                        DemandType.ArbitraryFeedForward, -rightPercentageSpeed);
                 this.backRightController.follow(this.frontRightController);
             }
 
-            this.frontLeftController.set(leftPercentageSpeed);
+            this.frontLeftController.set(-leftPercentageSpeed);
             this.backLeftController.follow(this.frontLeftController);
 
             this.frontRightController.set(rightPercentageSpeed);

@@ -382,19 +382,42 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
     }
 
     /**
+     * Calculates the percentage value of each offset along an assumed X, Y, and Z
+     * axis.
+     * 
+     * @param offsets each of the X, Y, and Z offset values
+     * @return the corrected offset values expressed as percentages of the maximum
+     *         boundary
+     */
+    private double[] normalizeOffsets(double[] offsets) {
+        Axis[] axes = { Axis.X, Axis.Y, Axis.Z };
+
+        // Normalize each of the provided offsets
+        for (int i = 0; i < offsets.length && i < axes.length; i++) {
+            // Normalize the offset
+            offsets[i] = this.normalizeOffset(offsets[i], axes[i]);
+        }
+
+        return offsets;
+    }
+
+    /**
      * Calculates a target offset, considering a given maximum offset from the
      * center of the limelight view, in conjunction with consideration to the
      * value's status as a negative or positive value.
      */
     private double normalizeOffset(double offset, Axis axis) {
+        // The original offset value
+        double original = offset;
+
         // Convert the raw offset to a percentage of the boundary definition
         switch (axis) {
         case X:
-            offset /= Constants.DEFAULT_VISION_BOUNDS[0];
+            offset = Math.abs(offset) / Constants.DEFAULT_VISION_BOUNDS[0];
 
             break;
         case Y:
-            offset /= Constants.DEFAULT_VISION_BOUNDS[1];
+            offset = Math.abs(offset) / Constants.DEFAULT_VISION_BOUNDS[1];
 
             break;
         case Z:
@@ -406,7 +429,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
         // If the offset is negative, compare it against the negative max number of
         // degrees. Otherwise, compare it against
         // the positive version.
-        return offset < 0 ? -Math.pow(offset, this.cfg.getkChange()) : Math.pow(offset, this.cfg.getkChange());
+        return original < 0 ? -Math.pow(offset, this.cfg.getkChange()) : Math.pow(offset, this.cfg.getkChange());
     }
 
     /**
@@ -419,7 +442,7 @@ public class MoveToReflectiveTargetCommand extends CommandBase {
                 this.m_vision.hasTarget());
 
         // Get each of the offset values from the limelight
-        double[] offsets = this.state.getOffsets();
+        double[] offsets = this.normalizeOffsets(this.state.getOffsets());
 
         // Check if we have a target
         boolean hasTarget = this.state.hasTarget();
