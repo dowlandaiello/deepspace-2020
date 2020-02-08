@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTable;
 /**
  * VisionSubsystem implements a connector to the limelight over a given
  * transport, namely NetworkTables.
- * 
+ *
  * @author Dowland Aiello
  */
 public class VisionSubsystem extends SubsystemBase {
@@ -21,7 +21,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         /**
          * Initializies a new LEDMode with the given corresponding integer value.
-         * 
+         *
          * @param value the value corresponding to the LEDMode
          */
         private LEDMode(int value) {
@@ -30,7 +30,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         /**
          * Converts the LEDMode to an integer.
-         * 
+         *
          * @return the value of the LEDMode
          */
         public int value() {
@@ -49,7 +49,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         /**
          * Initializes a new LimelightConfiguration with the given paramters.
-         * 
+         *
          * @param ledMode the mode that the limelight's LED should operate in
          */
         public LimelightConfiguration(LEDMode ledMode) {
@@ -60,7 +60,7 @@ public class VisionSubsystem extends SubsystemBase {
         /**
          * Applies the Limelight configuration to the limelight through the given
          * network tables connector.
-         * 
+         *
          * @param limelightTable the NetworkTable connector to the limelight
          */
         public void applySettings(NetworkTable limelightTable) {
@@ -77,9 +77,10 @@ public class VisionSubsystem extends SubsystemBase {
 
     /**
      * Initializes the VisionSubsystem with the given network tables configuration.
-     * 
+     *
      * @param limelightTable the connector to the limelight over the NetworkTables
      *                       API
+     * @param limelightConfiguration a configuration for the limelight
      */
     public VisionSubsystem(NetworkTable limelightTable, LimelightConfiguration limelightConfiguration) {
         // Set up the limelight tables API
@@ -88,13 +89,13 @@ public class VisionSubsystem extends SubsystemBase {
         // Use the user-provided limelight configuration class
         this.limelightConfiguratiion = limelightConfiguration;
 
-        // Apply all of our settinigs
+        // Apply all of our setttings
         this.limelightConfiguratiion.applySettings(this.limelightTable);
     }
 
     /**
      * Whether or not the limelight has a vision target.
-     * 
+     *
      * @return
      */
     public boolean hasTarget() {
@@ -110,7 +111,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     /**
      * Gets the x offset from the limelight.
-     * 
+     *
      * @return the offset of the crosshair from the target regiion
      */
     public double tx() {
@@ -119,10 +120,19 @@ public class VisionSubsystem extends SubsystemBase {
 
     /**
      * Gets the y offset from the limelight.
-     * 
+     *
      * @return the x offset of the crosshair from the target region
      */
     public double ty() {
         return this.limelightTable.getEntry("ty").getDouble(0.0);
+    }
+
+    /**
+     * Gets the size of the target from the limelight.
+     *
+     * @return the size of any target contained inside the bounds of the limelight
+     **/
+    public double ta() {
+        return this.limelightTable.getEntry("ta").getDouble(0.0);
     }
 }

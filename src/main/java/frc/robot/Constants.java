@@ -35,7 +35,7 @@ public final class Constants {
     public static double DEFAULT_VISION_MAX_SPEED = 0.75;
 
     /* The degree radius of the vision camera. */
-    public static double DEFAULT_VISION_BOUNDS = 30.0;
+    public static double[] DEFAULT_VISION_BOUNDS = new double[] { 27.0, 20.5, 2.0 };
 
     /*
      * The number of calls to the vision command in which there must not be a target
